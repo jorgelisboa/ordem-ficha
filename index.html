@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha de Ordem Paranormal RPG</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Teko:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Ficha de Ordem Paranormal</h1>
+        </header>
+
+        <div id="character-switcher" class="character-switcher">
+            </div>
+
+        <section id="info-basicas" class="grid-container">
+            <div class="input-group">
+                <label for="nome-jogador">Nome do Jogador</label>
+                <input type="text" id="nome-jogador" class="save-field">
+            </div>
+            <div class="input-group">
+                <label for="nome-personagem">Nome do Personagem</label>
+                <input type="text" id="nome-personagem" class="save-field">
+            </div>
+            <div class="input-group">
+                <label for="ocupacao">Ocupação</label>
+                <input type="text" id="ocupacao" class="save-field">
+            </div>
+             <div class="input-group">
+                <label for="origem">Origem</label>
+                <input type="text" id="origem" class="save-field">
+            </div>
+            <div class="input-group">
+                <label for="classe">Classe / Trilha</label>
+                <input type="text" id="classe" class="save-field">
+            </div>
+            <div class="input-group">
+                <label for="nex">NEX (%)</label>
+                <input type="number" id="nex" class="save-field recalculate" value="5" min="5" step="5">
+            </div>
+        </section>
+
+        <div class="main-layout">
+            <div class="left-column">
+                <section id="atributos">
+                    <h2 class="section-title">Atributos</h2>
+                    <div class="grid-atributos">
+                        <div class="atributo-item">
+                            <label for="agi">AGI</label>
+                            <input type="number" id="agi" class="save-field recalculate" value="0">
+                        </div>
+                        <div class="atributo-item">
+                            <label for="for">FOR</label>
+                            <input type="number" id="for" class="save-field recalculate" value="0">
+                        </div>
+                        <div class="atributo-item">
+                            <label for="int">INT</label>
+                            <input type="number" id="int" class="save-field recalculate" value="0">
+                        </div>
+                        <div class="atributo-item">
+                            <label for="pre">PRE</label>
+                            <input type="number" id="pre" class="save-field recalculate" value="0">
+                        </div>
+                        <div class="atributo-item">
+                            <label for="vig">VIG</label>
+                            <input type="number" id="vig" class="save-field recalculate" value="0">
+                        </div>
+                    </div>
+                </section>
+
+                <section id="status">
+                    <h2 class="section-title">Status</h2>
+                    <div class="status-grid">
+                        <div class="status-item pv">
+                            <h3>PONTOS DE VIDA</h3>
+                            <div class="status-values">
+                                <input type="number" id="pv-atual" class="save-field" placeholder="Atual">
+                                <span>/</span>
+                                <span id="pv-max">12</span>
+                            </div>
+                        </div>
+                         <div class="status-item san">
+                            <h3>SANIDADE</h3>
+                            <div class="status-values">
+                                <input type="number" id="san-atual" class="save-field" placeholder="Atual">
+                                <span>/</span>
+                                <span id="san-max">12</span>
+                            </div>
+                        </div>
+                         <div class="status-item pe">
+                            <h3>PONTOS DE ESFORÇO</h3>
+                            <div class="status-values">
+                                <input type="number" id="pe-atual" class="save-field" placeholder="Atual">
+                                <span>/</span>
+                                <span id="pe-max">2</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="defesas">
+                    <h2 class="section-title">Defesa</h2>
+                    <div class="defesa-grid">
+                        <div class="defesa-item">
+                            <span class="defesa-label">PASSIVA</span>
+                            <span id="defesa-passiva" class="defesa-valor">10</span>
+                        </div>
+                        <div class="defesa-item">
+                            <span class="defesa-label">ESQUIVA</span>
+                            <span id="defesa-esquiva" class="defesa-valor">10</span>
+                        </div>
+                    </div>
+                     <div class="input-group full-width">
+                        <label>Outras Resistências e Defesas</label>
+                        <textarea rows="3" id="outras-resistencias" class="save-field"></textarea>
+                    </div>
+                </section>
+
+                <section id="armas">
+                    <h2 class="section-title">Armas & Ataques</h2>
+                    <table id="tabela-armas">
+                        <thead>
+                            <tr>
+                                <th>Arma</th>
+                                <th>Tipo/Dano</th>
+                                <th>Crítico/Alcance</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                    <button id="add-arma" class="btn-add">+ Adicionar Arma</button>
+                </section>
+            </div>
+
+            <div class="right-column">
+                <section id="pericias">
+                    <h2 class="section-title">Perícias</h2>
+                    <table id="tabela-pericias">
+                        <thead>
+                            <tr>
+                                <th>Perícia</th>
+                                <th>Total</th>
+                                <th class="col-treino">T</th>
+                                <th>Bônus</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </section>
+            </div>
+        </div>
+        
+        <section id="inventario">
+            <h2 class="section-title">Inventário</h2>
+            <div class="inventario-header">
+                <span>Carga Máxima: <span id="carga-maxima">5</span></span>
+                <span>Itens: I / II / III / IV</span>
+            </div>
+            <table id="tabela-inventario">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Espaços</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+            <button id="add-item" class="btn-add">+ Adicionar Item</button>
+        </section>
+
+        <section id="habilidades">
+            <h2 class="section-title">Habilidades, Rituais & Anotações</h2>
+            <textarea id="habilidades-texto" rows="15" class="save-field" placeholder="Descreva aqui as habilidades de classe, trilha, origem, rituais conhecidos e outras anotações importantes..."></textarea>
+        </section>
+
+    </div><script src="script.js"></script>
+</body>
+</html>
