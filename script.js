@@ -728,13 +728,32 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function init() {
+        // Popula tabelas e dropdowns
         popularTabelaPericias();
         popularOrigens();
         popularClasses();
 
+        // Listeners dos Modais
         const modalOrigem = document.getElementById('modal-origem');
-        const closeButton = modalOrigem.querySelector('.close-button');
-        document.getElementById('origem').addEventListener('change', handleOrigemChange);
+        const modalArmas = document.getElementById('modal-armas');
+
+        modalOrigem.querySelector('.close-button').addEventListener('click', () => modalOrigem.style.display = 'none');
+        modalArmas.querySelector('.close-button').addEventListener('click', () => modalArmas.style.display = 'none');
+        document.getElementById('search-arma').addEventListener('input', (e) => popularListaArmas(e.target.value));
+
+        // Listener global para fechar modais ao clicar fora
+        window.addEventListener('click', (event) => {
+            if (event.target == modalOrigem || event.target == modalArmas) {
+                modalOrigem.style.display = 'none';
+                modalArmas.style.display = 'none';
+            }
+        });
+
+        // Listeners de Ações Principais
+        document.getElementById('origem').addEventListener('change', () => {
+            handleOrigemChange();
+            saveCharacterData();
+        });
         document.getElementById('classe').addEventListener('change', () => {
             handleClasseChange();
             saveCharacterData();
@@ -743,30 +762,16 @@ document.addEventListener('DOMContentLoaded', function() {
             updateHabilidades();
             saveCharacterData();
         });
-        closeButton.addEventListener('click', () => {
-            modalOrigem.style.display = 'none';
+
+        // Listeners para Adicionar Itens
+        document.getElementById('add-arma').addEventListener('click', () => {
+            popularListaArmas();
+            modalArmas.style.display = 'block';
         });
-        window.addEventListener('click', (event) => {
-            const modalArmas = document.getElementById('modal-armas');
-            if (event.target == modalOrigem || event.target == modalArmas) {
-                modalOrigem.style.display = 'none';
-                modalArmas.style.display = 'none';
-            }
-        });
+        document.getElementById('add-item').addEventListener('click', () => { addItemRow(); saveCharacterData(); });
+        document.getElementById('add-ritual').addEventListener('click', () => { addRitualRow(); saveCharacterData(); });
 
-        const savedData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
-        if (savedData && savedData.length === NUM_CHARS) {
-            characters = savedData;
-        } else {
-            for (let i = 0; i < NUM_CHARS; i++) {
-                characters.push(createDefaultCharacter());
-            }
-        }
-
-        setupCharacterSwitcher();
-        loadCharacterData(activeCharacterIndex);
-
-        // Event Listeners Globais
+        // Listeners de Eventos Globais (Inputs e Remoção)
         document.body.addEventListener('input', (event) => {
             if (event.target.closest('.save-field, #atributos, #pericias, #status')) {
                 saveCharacterData();
@@ -781,30 +786,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 saveCharacterData();
             }
         });
-        
-        document.getElementById('add-item').addEventListener('click', () => { addItemRow(); saveCharacterData(); });
-        document.getElementById('add-ritual').addEventListener('click', () => { addRitualRow(); saveCharacterData(); });
 
-        // Novo listener para o modal de armas
-        document.getElementById('add-arma').addEventListener('click', () => {
-            popularListaArmas();
-            document.getElementById('modal-armas').style.display = 'block';
-        });
-
-        const modalArmas = document.getElementById('modal-armas');
-        modalArmas.querySelector('.close-button').addEventListener('click', () => {
-            modalArmas.style.display = 'none';
-        });
-        document.getElementById('search-arma').addEventListener('input', (e) => {
-            popularListaArmas(e.target.value);
-        });
-        
         document.body.addEventListener('click', (event) => {
             if (event.target.classList.contains('btn-remove')) {
                 event.target.closest('tr').remove();
                 saveCharacterData();
             }
         });
+
+        // Carregamento Inicial
+        const savedData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
+        if (savedData && savedData.length === NUM_CHARS) {
+            characters = savedData;
+        } else {
+            for (let i = 0; i < NUM_CHARS; i++) {
+                characters.push(createDefaultCharacter());
+            }
+        }
+
+        setupCharacterSwitcher();
+        loadCharacterData(activeCharacterIndex);
     }
 
     init();
