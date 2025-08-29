@@ -55,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function() {
         'combatente': {
             nome: 'Combatente',
             pv_base: 20, pv_nivel: 4, pe_base: 2, pe_nivel: 2, san_base: 12, san_nivel: 3,
-            bonus_nex5: { pv: 12, pe: 1, san: 4 },
             habilidades_base: { 5: "Ataque Especial: Quando faz um Ataque, você pode gastar 2 PE para receber +2 no teste de ataque ou +5 na rolagem de dano." },
             trilhas: {
                 'aniquilador': {
@@ -108,7 +107,6 @@ document.addEventListener('DOMContentLoaded', function() {
         'especialista': {
             nome: 'Especialista',
             pv_base: 16, pv_nivel: 3, pe_base: 3, pe_nivel: 3, san_base: 16, san_nivel: 4,
-            bonus_nex5: { pv: 8, pe: 2, san: 8 },
             habilidades_base: { 5: "Perito: Escolha duas perícias. Quando faz um teste de uma delas, pode gastar 2 PE para somar +1d6 no resultado. Eclético: Pode gastar 2 PE para receber os benefícios de ser treinado numa perícia." },
             trilhas: {
                 'atirador_de_elite': {
@@ -161,7 +159,6 @@ document.addEventListener('DOMContentLoaded', function() {
         'ocultista': {
             nome: 'Ocultista',
             pv_base: 12, pv_nivel: 2, pe_base: 4, pe_nivel: 4, san_base: 20, san_nivel: 5,
-            bonus_nex5: { pv: 4, pe: 3, san: 12 },
             habilidades_base: { 5: "Escolhido Pelo Outro Lado: Você aprende 3 rituais de 1º Círculo. A cada novo círculo de poder, aprende um ritual adicional." },
             trilhas: {
                 'conduite': {
@@ -570,12 +567,6 @@ document.addEventListener('DOMContentLoaded', function() {
             pvMax = (classe.pv_base + vigor) + ((classe.pv_nivel + vigor) * (nexLevel - 1));
             peMax = (classe.pe_base + presenca) + ((classe.pe_nivel + presenca) * (nexLevel - 1));
             sanMax = (classe.san_base) + (classe.san_nivel * (nexLevel - 1));
-            // Bônus NEX 5%
-            if (nex >= 5) {
-                pvMax += classe.bonus_nex5.pv;
-                peMax += classe.bonus_nex5.pe;
-                sanMax += classe.bonus_nex5.san;
-            }
         }
 
         // Modificadores de Origem
