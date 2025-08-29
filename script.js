@@ -201,6 +201,103 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
+    const ARMAS_DATA = {
+        // Armas Simples - Corpo a Corpo - Leves
+        'faca': { nome: 'Faca', categoria: 0, dano: '1d4', critico: '19', alcance: 'Curto', tipo: 'C', espacos: 1 },
+        'martelo': { nome: 'Martelo', categoria: 0, dano: '1d6', critico: 'x2', alcance: '—', tipo: 'I', espacos: 1 },
+        'punhal': { nome: 'Punhal', categoria: 0, dano: '1d4', critico: 'x3', alcance: '—', tipo: 'P', espacos: 1 },
+        // Armas Simples - Corpo a Corpo - Uma Mão
+        'bastao': { nome: 'Bastão', categoria: 0, dano: '1d6/1d8', critico: 'x2', alcance: '—', tipo: 'I', espacos: 1 },
+        'machete': { nome: 'Machete', categoria: 0, dano: '1d6', critico: '19', alcance: '—', tipo: 'C', espacos: 1 },
+        'lanca': { nome: 'Lança', categoria: 0, dano: '1d6', critico: 'x2', alcance: 'Curto', tipo: 'P', espacos: 1 },
+        // Armas Simples - Corpo a Corpo - Duas Mãos
+        'cajado': { nome: 'Cajado', categoria: 0, dano: '1d6/1d6', critico: 'x2', alcance: '—', tipo: 'I', espacos: 2 },
+        // Armas Simples - Disparo - Duas Mãos
+        'arco': { nome: 'Arco', categoria: 0, dano: '1d6', critico: 'x3', alcance: 'Médio', tipo: 'P', espacos: 2 },
+        'besta': { nome: 'Besta', categoria: 0, dano: '1d8', critico: '19', alcance: 'Médio', tipo: 'P', espacos: 2 },
+        // Armas de Fogo - Leves
+        'pistola': { nome: 'Pistola', categoria: 1, dano: '1d12', critico: '18', alcance: 'Curto', tipo: 'B', espacos: 1 },
+        'revolver': { nome: 'Revólver', categoria: 1, dano: '2d6', critico: '19/x3', alcance: 'Curto', tipo: 'B', espacos: 1 },
+        // Armas de Fogo - Duas Mãos
+        'fuzil_caca': { nome: 'Fuzil de caça', categoria: 1, dano: '2d8', critico: '19/x3', alcance: 'Médio', tipo: 'B', espacos: 2 },
+        // Armas Táticas - Corpo a Corpo - Leves
+        'machadinha': { nome: 'Machadinha', categoria: 0, dano: '1d6', critico: 'x3', alcance: 'Curto', tipo: 'C', espacos: 1 },
+        'nunchaku': { nome: 'Nunchaku', categoria: 0, dano: '1d8', critico: 'x2', alcance: '—', tipo: 'I', espacos: 1 },
+        // Armas Táticas - Corpo a Corpo - Uma Mão
+        'corrente': { nome: 'Corrente', categoria: 0, dano: '1d8', critico: 'x2', alcance: '—', tipo: 'I', espacos: 1 },
+        'espada': { nome: 'Espada', categoria: 1, dano: '1d8/1d10', critico: '19', alcance: '—', tipo: 'C', espacos: 1 },
+        'florete': { nome: 'Florete', categoria: 1, dano: '1d6', critico: '18', alcance: '—', tipo: 'C', espacos: 1 },
+        'machado': { nome: 'Machado', categoria: 1, dano: '1d8', critico: 'x3', alcance: '—', tipo: 'C', espacos: 1 },
+        'maca': { nome: 'Maça', categoria: 1, dano: '2d4', critico: 'x2', alcance: '—', tipo: 'I', espacos: 1 },
+        // Armas Táticas - Corpo a Corpo - Duas Mãos
+        'acha': { nome: 'Acha', categoria: 1, dano: '1d12', critico: 'x3', alcance: '—', tipo: 'C', espacos: 2 },
+        'gadanho': { nome: 'Gadanho', categoria: 1, dano: '2d4', critico: 'x4', alcance: '—', tipo: 'C', espacos: 2 },
+        'katana': { nome: 'Katana', categoria: 1, dano: '1d10', critico: '19', alcance: '—', tipo: 'C', espacos: 2 },
+        'marreta': { nome: 'Marreta', categoria: 1, dano: '3d4', critico: 'x2', alcance: '—', tipo: 'I', espacos: 2 },
+        'montante': { nome: 'Montante', categoria: 1, dano: '2d6', critico: '19', alcance: '—', tipo: 'C', espacos: 2 },
+        'motosserra': { nome: 'Motosserra', categoria: 1, dano: '3d6', critico: 'x2', alcance: '—', tipo: 'C', espacos: 2 },
+        // Armas Táticas - Disparo - Duas Mãos
+        'arco_composto': { nome: 'Arco composto', categoria: 1, dano: '1d10', critico: 'x3', alcance: 'Médio', tipo: 'P', espacos: 2 },
+        'balestra': { nome: 'Balestra', categoria: 1, dano: '1d12', critico: '19', alcance: 'Médio', tipo: 'P', espacos: 2 },
+        // Armas Táticas - Fogo - Uma Mão
+        'submetralhadora': { nome: 'Submetralhadora', categoria: 1, dano: '2d6', critico: '19/x3', alcance: 'Curto', tipo: 'B', espacos: 1 },
+        // Armas Táticas - Fogo - Duas Mãos
+        'espingarda': { nome: 'Espingarda', categoria: 1, dano: '4d6', critico: 'x3', alcance: 'Curto', tipo: 'B', espacos: 2 },
+        'fuzil_assalto': { nome: 'Fuzil de assalto', categoria: 2, dano: '2d10', critico: '19/x3', alcance: 'Médio', tipo: 'B', espacos: 2 },
+        'fuzil_precisao': { nome: 'Fuzil de precisão', categoria: 3, dano: '2d10', critico: '19/x3', alcance: 'Longo', tipo: 'B', espacos: 2 },
+        // Armas Pesadas
+        'bazuca': { nome: 'Bazuca', categoria: 3, dano: '10d8', critico: 'x2', alcance: 'Médio', tipo: 'I', espacos: 2 },
+        'lanca_chamas': { nome: 'Lança-chamas', categoria: 3, dano: '6d6', critico: 'x2', alcance: 'Curto', tipo: 'Fogo', espacos: 2 },
+        'metralhadora': { nome: 'Metralhadora', categoria: 2, dano: '2d12', critico: '19/x3', alcance: 'Médio', tipo: 'B', espacos: 2 }
+    };
+
+    function popularListaArmas(filtro = '') {
+        const listaContainer = document.getElementById('lista-armas-modal');
+        listaContainer.innerHTML = '';
+        const filtroLowerCase = filtro.toLowerCase();
+
+        for (const key in ARMAS_DATA) {
+            const arma = ARMAS_DATA[key];
+            if (arma.nome.toLowerCase().includes(filtroLowerCase)) {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'modal-list-item';
+
+                const headerDiv = document.createElement('div');
+                headerDiv.className = 'modal-item-header';
+                headerDiv.innerHTML = `<span>${arma.nome}</span>`;
+
+                const addButton = document.createElement('button');
+                addButton.className = 'btn-add-small';
+                addButton.textContent = '+';
+                addButton.onclick = () => {
+                    addArmaRow({ nome: arma.nome, tipoDano: `${arma.tipo} / ${arma.dano}`, criticoAlcance: `${arma.critico} / ${arma.alcance}` });
+                    document.getElementById('modal-armas').style.display = 'none';
+                    saveCharacterData();
+                };
+                headerDiv.appendChild(addButton);
+
+                const detailsDiv = document.createElement('div');
+                detailsDiv.className = 'modal-item-details';
+                detailsDiv.style.display = 'none'; // Initially hidden
+                detailsDiv.innerHTML = `
+                    <p><strong>Dano:</strong> ${arma.dano} | <strong>Crítico:</strong> ${arma.critico}</p>
+                    <p><strong>Alcance:</strong> ${arma.alcance} | <strong>Tipo:</strong> ${arma.tipo}</p>
+                    <p><strong>Espaços:</strong> ${arma.espacos} | <strong>Categoria:</strong> ${arma.categoria}</p>
+                `;
+
+                headerDiv.addEventListener('click', (e) => {
+                    if (e.target.tagName !== 'BUTTON') {
+                        detailsDiv.style.display = detailsDiv.style.display === 'none' ? 'block' : 'none';
+                    }
+                });
+
+                itemDiv.appendChild(headerDiv);
+                itemDiv.appendChild(detailsDiv);
+                listaContainer.appendChild(itemDiv);
+            }
+        }
+    }
+
     function createDefaultCharacter() {
         const defaultPericias = {};
         periciasLista.forEach(p => {
@@ -650,8 +747,10 @@ document.addEventListener('DOMContentLoaded', function() {
             modalOrigem.style.display = 'none';
         });
         window.addEventListener('click', (event) => {
-            if (event.target == modalOrigem) {
+            const modalArmas = document.getElementById('modal-armas');
+            if (event.target == modalOrigem || event.target == modalArmas) {
                 modalOrigem.style.display = 'none';
+                modalArmas.style.display = 'none';
             }
         });
 
@@ -683,9 +782,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        document.getElementById('add-arma').addEventListener('click', () => { addArmaRow(); saveCharacterData(); });
         document.getElementById('add-item').addEventListener('click', () => { addItemRow(); saveCharacterData(); });
         document.getElementById('add-ritual').addEventListener('click', () => { addRitualRow(); saveCharacterData(); });
+
+        // Novo listener para o modal de armas
+        document.getElementById('add-arma').addEventListener('click', () => {
+            popularListaArmas();
+            document.getElementById('modal-armas').style.display = 'block';
+        });
+
+        const modalArmas = document.getElementById('modal-armas');
+        modalArmas.querySelector('.close-button').addEventListener('click', () => {
+            modalArmas.style.display = 'none';
+        });
+        document.getElementById('search-arma').addEventListener('input', (e) => {
+            popularListaArmas(e.target.value);
+        });
         
         document.body.addEventListener('click', (event) => {
             if (event.target.classList.contains('btn-remove')) {

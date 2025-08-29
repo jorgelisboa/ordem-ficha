@@ -391,3 +391,64 @@ input[type="checkbox"] {
 .stat-highlight {
     text-shadow: 0 0 8px #ffeb3b80;
 }
+
+.modal-search {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto-principal);
+    border: 1px solid var(--cor-borda);
+    border-radius: 4px;
+}
+
+.modal-list {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid var(--cor-borda);
+    padding: 5px;
+}
+
+.modal-list-item {
+    padding: 10px;
+    border-bottom: 1px solid var(--cor-borda);
+    cursor: pointer;
+}
+
+.modal-list-item:last-child {
+    border-bottom: none;
+}
+
+.modal-list-item:hover {
+    background-color: #333;
+}
+
+.modal-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
+
+.modal-item-details {
+    margin-top: 10px;
+    padding-left: 10px;
+    border-left: 2px solid var(--cor-destaque);
+    font-size: 0.9rem;
+    color: var(--cor-texto-secundario);
+}
+
+.btn-add-small {
+    background-color: var(--cor-destaque);
+    color: white;
+    border: none;
+    padding: 2px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+.btn-add-small:hover {
+    background-color: var(--cor-destaque-hover);
+}
