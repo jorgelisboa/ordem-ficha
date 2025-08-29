@@ -32,6 +32,12 @@
                 <label for="ocupacao">Ocupação</label>
                 <input type="text" id="ocupacao" class="save-field">
             </div>
+            <div class="input-group">
+                <label for="idade">Faixa Etária</label>
+                <select id="idade" class="save-field">
+                    <!-- Populado pelo JS -->
+                </select>
+            </div>
              <div class="input-group">
                 <label for="origem">Origem</label>
                 <select id="origem" class="save-field">
@@ -52,6 +58,14 @@
             <div class="input-group">
                 <label for="nex">NEX (%)</label>
                 <input type="number" id="nex" class="save-field recalculate" value="5" min="5" step="5">
+            </div>
+        </section>
+
+        <section id="desvantagens-section" style="display: none;">
+            <h2 class="section-title">Peso da Idade</h2>
+            <p id="desvantagens-info"></p>
+            <div id="desvantagens-container" class="grid-container">
+                <!-- Checkboxes de desvantagens populados pelo JS -->
             </div>
         </section>
 

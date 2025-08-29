@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'combatente': {
             nome: 'Combatente',
             pv_base: 20, pv_nivel: 4, pe_base: 2, pe_nivel: 2, san_base: 12, san_nivel: 3,
+            bonus_nex5: { pv: 12, pe: 1, san: 4 },
             habilidades_base: { 5: "Ataque Especial: Quando faz um Ataque, você pode gastar 2 PE para receber +2 no teste de ataque ou +5 na rolagem de dano." },
             trilhas: {
                 'aniquilador': {
@@ -107,6 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'especialista': {
             nome: 'Especialista',
             pv_base: 16, pv_nivel: 3, pe_base: 3, pe_nivel: 3, san_base: 16, san_nivel: 4,
+            bonus_nex5: { pv: 8, pe: 2, san: 8 },
             habilidades_base: { 5: "Perito: Escolha duas perícias. Quando faz um teste de uma delas, pode gastar 2 PE para somar +1d6 no resultado. Eclético: Pode gastar 2 PE para receber os benefícios de ser treinado numa perícia." },
             trilhas: {
                 'atirador_de_elite': {
@@ -159,6 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'ocultista': {
             nome: 'Ocultista',
             pv_base: 12, pv_nivel: 2, pe_base: 4, pe_nivel: 4, san_base: 20, san_nivel: 5,
+            bonus_nex5: { pv: 4, pe: 3, san: 12 },
             habilidades_base: { 5: "Escolhido Pelo Outro Lado: Você aprende 3 rituais de 1º Círculo. A cada novo círculo de poder, aprende um ritual adicional." },
             trilhas: {
                 'conduite': {
@@ -251,6 +254,33 @@ document.addEventListener('DOMContentLoaded', function() {
         'metralhadora': { nome: 'Metralhadora', categoria: 2, dano: '2d12', critico: '19/x3', alcance: 'Médio', tipo: 'B', espacos: 2 }
     };
 
+    const IDADE_DATA = {
+        'crianca': { nome: 'Criança (9-12)', modificadores: { forca_max: 1, vigor_max: 1, deslocamento: 6, tamanho: 'Pequeno', origem_beneficios: 1, defesa: 2, resistencia: 5 } },
+        'adolescente': { nome: 'Adolescente (13-16)', modificadores: { forca_max: 2, origem_beneficios: 2, pe_bonus: 5 } },
+        'jovem': { nome: 'Jovem (17-24)', modificadores: {} },
+        'adulto': { nome: 'Adulto (25-44)', modificadores: { poder_classe_extra: 1, desvantagens: 1 } },
+        'maduro': { nome: 'Maduro (45-64)', modificadores: { nex_bonus: 5, desvantagens: 2 } },
+        'idoso': { nome: 'Idoso (65+)', modificadores: { nex_bonus: 10, desvantagens: 3, attr_fisico_max: false } }
+    };
+
+    const DESVANTAGENS_DATA = {
+        'catarata': { nome: 'Catarata', descricao: 'Sofre –5 em testes de Percepção e Pontaria.' },
+        'definhamento': { nome: 'Definhamento', descricao: 'Sofre –5 em testes de Fortitude e de manobras de combate.' },
+        'devagar': { nome: '“Devagar, Jovem!”', descricao: 'Seu deslocamento é reduzido em –3m e você não pode fazer investidas.' },
+        'distraido': { nome: 'Distraído', descricao: 'Fica surpreendido na primeira rodada de qualquer cena de ação e perde seu primeiro turno em qualquer cena de investigação.' },
+        'fragil': { nome: 'Frágil', descricao: 'Perde 2 PV por NEX.', mod: { pv_por_nex: -2 } },
+        'gota': { nome: 'Gota', descricao: 'Sempre que faz um teste de Agilidade ou baseado em Agilidade, ou escolhe a ação esquiva, você sofre 1d6 pontos de dano.' },
+        'juntas_duras': { nome: 'Juntas Duras', descricao: 'Sofre –5 em testes de Acrobacia e Reflexos.' },
+        'melancolico': { nome: 'Melancólico', descricao: 'Perde 1 PE por NEX.', mod: { pe_por_nex: -1 } },
+        'no_meu_tempo': { nome: '“No Meu Tempo”', descricao: 'Sofre –5 em testes de Intuição e Vontade.' },
+        'pulmao_ruim': { nome: 'Pulmão Ruim', descricao: 'Sempre que faz um teste de Força ou baseado em Força, você sofre 1d6 pontos de dano.' },
+        'rabugento': { nome: 'Rabugento', descricao: 'Sofre –5 em testes de Presença e de perícias baseadas em Presença, com exceção de Intimidação.' },
+        'recurvado': { nome: 'Recurvado', descricao: 'Considerado Pequeno, mas sem bônus de Furtividade.' },
+        'sono_ruim': { nome: 'Sono Ruim', descricao: 'Sua condição de descanso é sempre uma categoria pior.' },
+        'teimoso': { nome: 'Teimoso', descricao: 'Não pode receber nem fornecer bônus por ajuda.' },
+        'tosse': { nome: 'Tosse', descricao: 'Pode perder seu turno em uma crise de tosse (rolar 1d6, resultado 1).' }
+    };
+
     function popularListaArmas(filtro = '') {
         const listaContainer = document.getElementById('lista-armas-modal');
         listaContainer.innerHTML = '';
@@ -308,6 +338,7 @@ document.addEventListener('DOMContentLoaded', function() {
             info: {
                 'nome-jogador': '', 'nome-personagem': '', 'ocupacao': '', 'origem': 'nenhuma',
                 'classe': 'nenhuma', 'trilha': 'nenhuma', 'nex': 5, 'pv-atual': '', 'san-atual': '', 'pe-atual': '',
+                'idade': 'jovem', 'desvantagens': [],
                 'outras-resistencias': '', 'habilidades-texto': ''
             },
             atributos: { 'agi': 1, 'for': 1, 'int': 1, 'pre': 1, 'vig': 1 },
@@ -330,6 +361,55 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         tbody.appendChild(tr);
         tr.querySelectorAll('input, textarea').forEach(input => input.addEventListener('input', saveCharacterData));
+    }
+
+    function popularIdades() {
+        const selectIdade = document.getElementById('idade');
+        Object.keys(IDADE_DATA).forEach(key => {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = IDADE_DATA[key].nome;
+            selectIdade.appendChild(option);
+        });
+    }
+
+    function updateDesvantagensUI() {
+        const idadeKey = document.getElementById('idade').value;
+        const idadeInfo = IDADE_DATA[idadeKey];
+        const desvantagensSection = document.getElementById('desvantagens-section');
+        const desvantagensContainer = document.getElementById('desvantagens-container');
+        const desvantagensInfo = document.getElementById('desvantagens-info');
+
+        desvantagensContainer.innerHTML = '';
+
+        if (idadeInfo && idadeInfo.modificadores.desvantagens > 0) {
+            const numDesvantagens = idadeInfo.modificadores.desvantagens;
+            desvantagensInfo.textContent = `Você deve escolher ${numDesvantagens} desvantagem(ns) do "Peso da Idade".`;
+
+            Object.keys(DESVANTAGENS_DATA).forEach(key => {
+                const desvantagem = DESVANTAGENS_DATA[key];
+                const label = document.createElement('label');
+                label.className = 'checkbox-label';
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = key;
+                checkbox.name = 'desvantagem';
+
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(` ${desvantagem.nome}: ${desvantagem.descricao}`));
+                desvantagensContainer.appendChild(label);
+            });
+
+            desvantagensSection.style.display = 'block';
+        } else {
+            desvantagensSection.style.display = 'none';
+        }
+    }
+
+    function handleIdadeChange() {
+        updateDesvantagensUI();
+        // A lógica de aplicar os modificadores será no recalcularFicha
+        saveCharacterData();
     }
 
     function saveCharacterData() {
@@ -367,6 +447,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 item: inputs[0].value,
                 espacos: inputs[1].value
             });
+        });
+
+        // Salvar desvantagens
+        charData.info.desvantagens = [];
+        document.querySelectorAll('#desvantagens-container input[type="checkbox"]:checked').forEach(checkbox => {
+            charData.info.desvantagens.push(checkbox.value);
         });
 
         // Salvar rituais
@@ -429,6 +515,15 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('origem').value = origemSalva;
         aplicarBeneficiosOrigem(origemSalva);
 
+        document.getElementById('idade').value = charData.info['idade'] || 'jovem';
+        updateDesvantagensUI();
+        if (charData.info.desvantagens) {
+            charData.info.desvantagens.forEach(desvantagemKey => {
+                const checkbox = document.querySelector(`#desvantagens-container input[value="${desvantagemKey}"]`);
+                if (checkbox) checkbox.checked = true;
+            });
+        }
+
         document.getElementById('classe').value = charData.info['classe'] || 'nenhuma';
         handleClasseChange();
         document.getElementById('trilha').value = charData.info['trilha'] || 'nenhuma';
@@ -440,73 +535,67 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function recalcularFicha() {
         document.querySelectorAll('.stat-highlight').forEach(el => el.classList.remove('stat-highlight'));
-        const origemKey = document.getElementById('origem').value;
-        const origem = ORIGENS_DATA[origemKey];
-        const beneficios = (origem && origem.beneficios) ? origem.beneficios : {};
 
-        const nex = parseInt(document.getElementById('nex').value) || 0;
+        // 1. Coletar todos os dados e modificadores
+        const idadeKey = document.getElementById('idade').value;
+        const idadeMod = IDADE_DATA[idadeKey]?.modificadores || {};
+
+        const origemKey = document.getElementById('origem').value;
+        const origemBeneficios = ORIGENS_DATA[origemKey]?.beneficios || {};
+
+        const classeKey = document.getElementById('classe').value;
+        const classe = CLASSES_DATA[classeKey];
+
+        const desvantagensKeys = characters[activeCharacterIndex].info.desvantagens || [];
+        const desvantagensMod = desvantagensKeys.map(key => DESVANTAGENS_DATA[key]?.mod || {}).reduce((acc, obj) => ({ ...acc, ...obj }), {});
+
+        // 2. Coletar valores base da ficha
+        const nexInput = parseInt(document.getElementById('nex').value) || 0;
         const vigor = parseInt(document.getElementById('vig').value) || 0;
         const presenca = parseInt(document.getElementById('pre').value) || 0;
         const agilidade = parseInt(document.getElementById('agi').value) || 0;
         const forca = parseInt(document.getElementById('for').value) || 0;
         const intelecto = parseInt(document.getElementById('int').value) || 0;
 
-        const atributos = {
-            agi: agilidade, for: forca, int: intelecto, pre: presenca, vig: vigor
-        };
+        const atributos = { agi: agilidade, for: forca, int: intelecto, pre: presenca, vig: vigor };
 
+        // 3. Aplicar modificadores de base
+        let nex = nexInput + (idadeMod.nex_bonus || 0);
         const nexLevel = Math.floor(nex / 5);
 
-        const classeKey = document.getElementById('classe').value;
-        const classe = CLASSES_DATA[classeKey];
-
-        const pvBase = classe ? classe.pv_base : 16;
-        const pvNivel = classe ? classe.pv_nivel : 3;
-        const sanBase = classe ? classe.san_base : 12;
-        const sanNivel = classe ? classe.san_nivel : 3;
-        const peBase = classe ? classe.pe_base : 2;
-        const peNivel = classe ? classe.pe_nivel : 2;
-
-        // --- Cálculos de Status ---
-        let pvMax = (pvBase + vigor) + ((pvNivel + vigor) * (nexLevel - 1));
-        if (beneficios.pv_por_nex) {
-            pvMax += (Math.floor(nex / 5) * beneficios.pv_por_nex);
-            document.getElementById('pv-max').classList.add('stat-highlight');
-        }
-
-        let sanMax = sanBase + (sanNivel * (nexLevel - 1));
-        if (beneficios.sanidade_mod) {
-            sanMax = Math.floor(sanMax * beneficios.sanidade_mod);
-            document.getElementById('san-max').classList.add('stat-highlight');
-        }
-        if (beneficios.san_por_nex) {
-            sanMax += (Math.floor(nex / 5) * beneficios.san_por_nex);
-            document.getElementById('san-max').classList.add('stat-highlight');
-        }
-
-        let peMax = (peBase + presenca) + ((peNivel + presenca) * (nexLevel - 1));
-        if (beneficios.pe_bonus) {
-            peMax += beneficios.pe_bonus;
-            document.getElementById('pe-max').classList.add('stat-highlight');
-        }
-        if (beneficios.pe_por_nex_impar) {
-            const bonusPEImpar = Math.floor((nexLevel - 1) / 2);
-            if (bonusPEImpar > 0) {
-                peMax += bonusPEImpar;
-                document.getElementById('pe-max').classList.add('stat-highlight');
+        // 4. Calcular Stats
+        let pvMax = 0, peMax = 0, sanMax = 0;
+        if (classe) {
+            // Base da classe
+            pvMax = (classe.pv_base + vigor) + ((classe.pv_nivel + vigor) * (nexLevel - 1));
+            peMax = (classe.pe_base + presenca) + ((classe.pe_nivel + presenca) * (nexLevel - 1));
+            sanMax = (classe.san_base) + (classe.san_nivel * (nexLevel - 1));
+            // Bônus NEX 5%
+            if (nex >= 5) {
+                pvMax += classe.bonus_nex5.pv;
+                peMax += classe.bonus_nex5.pe;
+                sanMax += classe.bonus_nex5.san;
             }
         }
 
+        // Modificadores de Origem
+        if (origemBeneficios.pv_por_nex) pvMax += (nexLevel * origemBeneficios.pv_por_nex);
+        if (origemBeneficios.san_por_nex) sanMax += (nexLevel * origemBeneficios.san_por_nex);
+        if (origemBeneficios.pe_bonus) peMax += origemBeneficios.pe_bonus;
+        if (origemBeneficios.pe_por_nex_impar) peMax += Math.floor((nexLevel - 1) / 2);
+        if (origemBeneficios.sanidade_mod) sanMax = Math.floor(sanMax * origemBeneficios.sanidade_mod);
+
+        // Modificadores de Idade/Desvantagem
+        if (idadeMod.pe_bonus) peMax += idadeMod.pe_bonus;
+        if (desvantagensMod.pv_por_nex) pvMax += (nexLevel * desvantagensMod.pv_por_nex);
+        if (desvantagensMod.pe_por_nex) peMax += (nexLevel * desvantagensMod.pe_por_nex);
+
         document.getElementById('pv-max').textContent = pvMax;
-        document.getElementById('san-max').textContent = sanMax;
         document.getElementById('pe-max').textContent = peMax;
+        document.getElementById('san-max').textContent = sanMax;
 
         // --- Cálculo de Defesa ---
-        let defesaPassiva = 10 + agilidade;
-        if (beneficios.defesa_passiva) {
-            defesaPassiva += beneficios.defesa_passiva;
-            document.getElementById('defesa-passiva').classList.add('stat-highlight');
-        }
+        let defesaPassiva = 10 + agilidade + (origemBeneficios.defesa_passiva || 0) + (idadeMod.defesa || 0);
         document.getElementById('defesa-passiva').textContent = defesaPassiva;
 
         // --- Perícias ---
@@ -525,8 +614,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.getElementById('defesa-esquiva').textContent = 10 + totalReflexos;
         document.getElementById('carga-maxima').textContent = 5 + forca;
-
-        // Omitido por enquanto: Destaque de outros benefícios de texto
     }
 
     function popularOrigens() {
@@ -732,6 +819,7 @@ document.addEventListener('DOMContentLoaded', function() {
         popularTabelaPericias();
         popularOrigens();
         popularClasses();
+        popularIdades();
 
         // Listeners dos Modais
         const modalOrigem = document.getElementById('modal-origem');
@@ -762,6 +850,8 @@ document.addEventListener('DOMContentLoaded', function() {
             updateHabilidades();
             saveCharacterData();
         });
+        document.getElementById('idade').addEventListener('change', handleIdadeChange);
+        document.getElementById('desvantagens-container').addEventListener('change', saveCharacterData);
 
         // Listeners para Adicionar Itens
         document.getElementById('add-arma').addEventListener('click', () => {
