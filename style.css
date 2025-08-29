@@ -136,7 +136,8 @@ label {
 
 input[type="text"],
 input[type="number"],
-textarea {
+textarea,
+select {
     background-color: var(--cor-fundo);
     color: var(--cor-texto-principal);
     border: 1px solid var(--cor-borda);
