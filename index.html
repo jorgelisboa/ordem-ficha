@@ -34,7 +34,9 @@
             </div>
              <div class="input-group">
                 <label for="origem">Origem</label>
-                <input type="text" id="origem" class="save-field">
+                <select id="origem" class="save-field">
+                    <option value="nenhuma" selected>-- Selecione --</option>
+                </select>
             </div>
             <div class="input-group">
                 <label for="classe">Classe / Trilha</label>
@@ -184,6 +186,16 @@
             <textarea id="habilidades-texto" rows="15" class="save-field" placeholder="Descreva aqui as habilidades de classe, trilha, origem, rituais conhecidos e outras anotações importantes..."></textarea>
         </section>
 
-    </div><script src="script.js"></script>
+    </div>
+
+    <div id="modal-origem" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3 id="modal-origem-titulo"></h3>
+            <div id="modal-origem-beneficios"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>

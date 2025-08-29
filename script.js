@@ -22,6 +22,35 @@ document.addEventListener('DOMContentLoaded', function() {
         { nome: 'Tecnologia', attr: 'int' }, { nome: 'Vontade', attr: 'pre' }
     ];
 
+    const ORIGENS_DATA = {
+        'academico': { nome: 'Acadêmico', pericias: ['Ciências', 'Investigação'], poder: 'Saber é Poder', descricao: 'Quando faz um teste usando Intelecto, você pode gastar 2 PE para receber +5 nesse teste.' },
+        'agente-de-saude': { nome: 'Agente de Saúde', pericias: ['Intuição', 'Medicina'], poder: 'Técnica Medicinal', descricao: 'Sempre que cura um personagem, você adiciona seu Intelecto no total de PV curados.' },
+        'amnesico': { nome: 'Amnésico', pericias: ['Duas à sua escolha'], poder: 'Vislumbres do Passado', descricao: 'Uma vez por sessão, você pode fazer um teste de Intelecto (DT 10) para reconhecer pessoas ou lugares familiares, que tenha encontrado antes de perder a memória. Se passar, recebe 1d4 PE temporários e, a critério do mestre, uma informação útil. As perícias de um amnésico são escolhidas pelo mestre.' },
+        'artista': { nome: 'Artista', pericias: ['Artes', 'Enganação'], poder: 'Magnum Opus', descricao: 'Você é famoso por uma de suas obras. Uma vez por missão, pode determinar que um personagem envolvido em uma cena de interação o reconheça. Você recebe +5 em testes de Presença e de perícias baseadas em Presença contra aquele personagem.' },
+        'atleta': { nome: 'Atleta', pericias: ['Acrobacia', 'Atletismo'], poder: '110%', descricao: 'Quando faz um teste de perícia usando Força ou Agilidade (exceto Luta e Pontaria) você pode gastar 2 PE para receber +5 nesse teste.' },
+        'chef': { nome: 'Chef', pericias: ['Fortitude', 'Profissão'], poder: 'Ingrediente Secreto', descricao: 'Em cenas de interlúdio, você pode fazer a ação alimentar-se para cozinhar um prato especial. Você, e todos os membros do grupo que fizeram a ação alimentar-se, recebem o benefício de dois pratos.' },
+        'criminoso': { nome: 'Criminoso', pericias: ['Crime', 'Furtividade'], poder: 'O Crime Compensa', descricao: 'No final de uma missão, escolha um item encontrado na missão. Em sua próxima missão, você pode incluir esse item em seu inventário sem que ele conte em seu limite de itens por patente.' },
+        'cultista-arrependido': { nome: 'Cultista Arrependido', pericias: ['Ocultismo', 'Religião'], poder: 'Traços do Outro Lado', descricao: 'Você possui um poder paranormal à sua escolha. Porém, começa o jogo com metade da Sanidade normal para sua classe.', beneficios: { sanidade_mod: 0.5 } },
+        'desgarrado': { nome: 'Desgarrado', pericias: ['Fortitude', 'Sobrevivência'], poder: 'Calejado', descricao: 'Você recebe +1 PV para cada 5% de NEX.', beneficios: { pv_por_nex: 1 } },
+        'engenheiro': { nome: 'Engenheiro', pericias: ['Profissão', 'Tecnologia'], poder: 'Ferramentas Favoritas', descricao: 'Um item a sua escolha (exceto armas) conta como uma categoria abaixo.' },
+        'executivo': { nome: 'Executivo', pericias: ['Diplomacia', 'Profissão'], poder: 'Processo Otimizado', descricao: 'Sempre que faz um teste de perícia durante um teste estendido, ou uma ação para revisar documentos, pode pagar 2 PE para receber +5 nesse teste.' },
+        'investigador': { nome: 'Investigador', pericias: ['Investigação', 'Percepção'], poder: 'Faro para Pistas', descricao: 'Uma vez por cena, quando fizer um teste para procurar pistas, você pode gastar 1 PE para receber +5 nesse teste.' },
+        'lutador': { nome: 'Lutador', pericias: ['Luta', 'Reflexos'], poder: 'Mão Pesada', descricao: 'Você recebe +2 em rolagens de dano com ataques corpo a corpo.' },
+        'magnata': { nome: 'Magnata', pericias: ['Diplomacia', 'Pilotagem'], poder: 'Patrocinador da Ordem', descricao: 'Seu limite de crédito é sempre considerado um acima do atual.' },
+        'mercenario': { nome: 'Mercenário', pericias: ['Iniciativa', 'Intimidação'], poder: 'Posição de Combate', descricao: 'No primeiro turno de cada cena de ação, você pode gastar 2 PE para receber uma ação de movimento adicional.' },
+        'militar': { nome: 'Militar', pericias: ['Pontaria', 'Tática'], poder: 'Para Bellum', descricao: 'Você recebe +2 em rolagens de dano com armas de fogo.' },
+        'operario': { nome: 'Operário', pericias: ['Fortitude', 'Profissão'], poder: 'Ferramenta de Trabalho', descricao: 'Escolha uma arma simples ou tática que poderia ser uma ferramenta. Você sabe usar a arma e recebe +1 em testes de ataque, rolagens de dano e margem de ameaça com ela.' },
+        'policial': { nome: 'Policial', pericias: ['Percepção', 'Pontaria'], poder: 'Patrulha', descricao: 'Você recebe +2 em Defesa.', beneficios: { defesa_passiva: 2 } },
+        'religioso': { nome: 'Religioso', pericias: ['Religião', 'Vontade'], poder: 'Acalentar', descricao: 'Você recebe +5 em testes de Religião para acalmar. Além disso, quando acalma uma pessoa, ela recebe 1d6 + PRE de Sanidade.' },
+        'servidor-publico': { nome: 'Servidor Público', pericias: ['Intuição', 'Vontade'], poder: 'Espírito Cívico', descricao: 'Sempre que faz um teste para ajudar, você pode gastar 1 PE para aumentar o bônus concedido em +2.' },
+        'teorico-conspiracao': { nome: 'Teórico da Conspiração', pericias: ['Investigação', 'Ocultismo'], poder: 'Eu Já Sabia', descricao: 'Você recebe resistência a dano mental igual ao seu Intelecto.', beneficios: { resist_mental_intelecto: true } },
+        'ti': { nome: 'T.I.', pericias: ['Investigação', 'Tecnologia'], poder: 'Motor de Busca', descricao: 'A critério do Mestre, sempre que tiver acesso a internet, você pode gastar 2 PE para substituir um teste de perícia qualquer por um teste de Tecnologia.' },
+        'trabalhador-rural': { nome: 'Trabalhador Rural', pericias: ['Adestramento', 'Sobrevivência'], poder: 'Desbravador', descricao: 'Quando faz um teste de Adestramento ou Sobrevivência, você pode gastar 2 PE para receber +5 nesse teste. Você não sofre penalidade em deslocamento por terreno difícil.' },
+        'trambiqueiro': { nome: 'Trambiqueiro', pericias: ['Crime', 'Enganação'], poder: 'Impostor', descricao: 'Uma vez por cena, você pode gastar 2 PE para substituir um teste de perícia qualquer por um teste de Enganação.' },
+        'universitario': { nome: 'Universitário', pericias: ['Atualidades', 'Investigação'], poder: 'Dedicação', descricao: 'Você recebe +1 PE, e mais 1 PE adicional a cada NEX ímpar (15%, 25%...). Seu limite de PE por turno aumenta em 1.', beneficios: { pe_bonus: 1, pe_por_nex_impar: 1, pe_limite_turno: 1 } },
+        'vitima': { nome: 'Vítima', pericias: ['Reflexos', 'Vontade'], poder: 'Cicatrizes Psicológicas', descricao: 'Você recebe +1 de Sanidade para cada 5% de NEX.', beneficios: { san_por_nex: 1 } }
+    };
+
     function createDefaultCharacter() {
         const defaultPericias = {};
         periciasLista.forEach(p => {
@@ -30,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         return {
             info: {
-                'nome-jogador': '', 'nome-personagem': '', 'ocupacao': '', 'origem': '', 
+                'nome-jogador': '', 'nome-personagem': '', 'ocupacao': '', 'origem': 'nenhuma',
                 'classe': '', 'nex': 5, 'pv-atual': '', 'san-atual': '', 'pe-atual': '',
                 'outras-resistencias': '', 'habilidades-texto': ''
             },
@@ -115,33 +144,77 @@ document.addEventListener('DOMContentLoaded', function() {
         inventarioTbody.innerHTML = '';
         charData.inventario.forEach(item => addItemRow(item));
 
+        const origemSalva = charData.info['origem'] || 'nenhuma';
+        document.getElementById('origem').value = origemSalva;
+        aplicarBeneficiosOrigem(origemSalva);
+
         updateSwitcherUI();
         recalcularFicha();
     }
     
     function recalcularFicha() {
+        document.querySelectorAll('.stat-highlight').forEach(el => el.classList.remove('stat-highlight'));
+        const origemKey = document.getElementById('origem').value;
+        const origem = ORIGENS_DATA[origemKey];
+        const beneficios = (origem && origem.beneficios) ? origem.beneficios : {};
+
         const nex = parseInt(document.getElementById('nex').value) || 0;
         const vigor = parseInt(document.getElementById('vig').value) || 0;
         const presenca = parseInt(document.getElementById('pre').value) || 0;
         const agilidade = parseInt(document.getElementById('agi').value) || 0;
         const forca = parseInt(document.getElementById('for').value) || 0;
+        const intelecto = parseInt(document.getElementById('int').value) || 0;
 
         const atributos = {
-            agi: agilidade, for: forca, int: parseInt(document.getElementById('int').value) || 0,
-            pre: presenca, vig: vigor
+            agi: agilidade, for: forca, int: intelecto, pre: presenca, vig: vigor
         };
 
-        const pvPorNivel = 8 + vigor;
-        const sanPorNivel = 8;
-        const pePorNivel = 2 + presenca;
         const nexLevel = Math.floor(nex / 5);
 
-        document.getElementById('pv-max').textContent = pvPorNivel + ((vigor + 2) * (nexLevel - 1));
-        document.getElementById('san-max').textContent = sanPorNivel + (2 * (nexLevel - 1));
-        document.getElementById('pe-max').textContent = pePorNivel + (presenca * (nexLevel - 1));
+        // --- Cálculos de Status ---
+        let pvMax = (8 + vigor) + ((vigor + 2) * (nexLevel - 1));
+        if (beneficios.pv_por_nex) {
+            pvMax += (Math.floor(nex / 5) * beneficios.pv_por_nex);
+            document.getElementById('pv-max').classList.add('stat-highlight');
+        }
 
+        let sanMax = 8 + (2 * (nexLevel - 1));
+        if (beneficios.sanidade_mod) {
+            sanMax = Math.floor(sanMax * beneficios.sanidade_mod);
+            document.getElementById('san-max').classList.add('stat-highlight');
+        }
+        if (beneficios.san_por_nex) {
+            sanMax += (Math.floor(nex / 5) * beneficios.san_por_nex);
+            document.getElementById('san-max').classList.add('stat-highlight');
+        }
+
+        let peMax = (2 + presenca) + (presenca * (nexLevel - 1));
+        if (beneficios.pe_bonus) {
+            peMax += beneficios.pe_bonus;
+            document.getElementById('pe-max').classList.add('stat-highlight');
+        }
+        if (beneficios.pe_por_nex_impar) {
+            const bonusPEImpar = Math.floor((nexLevel - 1) / 2);
+            if (bonusPEImpar > 0) {
+                peMax += bonusPEImpar;
+                document.getElementById('pe-max').classList.add('stat-highlight');
+            }
+        }
+
+        document.getElementById('pv-max').textContent = pvMax;
+        document.getElementById('san-max').textContent = sanMax;
+        document.getElementById('pe-max').textContent = peMax;
+
+        // --- Cálculo de Defesa ---
+        let defesaPassiva = 10 + agilidade;
+        if (beneficios.defesa_passiva) {
+            defesaPassiva += beneficios.defesa_passiva;
+            document.getElementById('defesa-passiva').classList.add('stat-highlight');
+        }
+        document.getElementById('defesa-passiva').textContent = defesaPassiva;
+
+        // --- Perícias ---
         const bonusTreino = (nex >= 85 ? 15 : (nex >= 50 ? 10 : 5));
-
         let totalReflexos = 0;
         document.querySelectorAll('#tabela-pericias tbody tr').forEach(row => {
             const attrBase = row.dataset.attr;
@@ -154,9 +227,72 @@ document.addEventListener('DOMContentLoaded', function() {
             if (row.dataset.nome === 'Reflexos') totalReflexos = total;
         });
 
-        document.getElementById('defesa-passiva').textContent = 10 + agilidade;
         document.getElementById('defesa-esquiva').textContent = 10 + totalReflexos;
         document.getElementById('carga-maxima').textContent = 5 + forca;
+
+        // Omitido por enquanto: Destaque de outros benefícios de texto
+    }
+
+    function popularOrigens() {
+        const selectOrigem = document.getElementById('origem');
+        Object.keys(ORIGENS_DATA).forEach(key => {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = ORIGENS_DATA[key].nome;
+            selectOrigem.appendChild(option);
+        });
+    }
+
+    function aplicarBeneficiosOrigem(origemKey) {
+        // Limpar benefícios de perícia anteriores
+        document.querySelectorAll('.treino-check.origem-treino').forEach(checkbox => {
+            checkbox.checked = false;
+            checkbox.classList.remove('origem-treino');
+            checkbox.disabled = false;
+        });
+        document.querySelectorAll('#tabela-pericias tbody tr.origem-highlight').forEach(row => {
+            row.classList.remove('origem-highlight');
+        });
+
+        if (origemKey === 'nenhuma' || !origemKey) return;
+
+        const origem = ORIGENS_DATA[origemKey];
+        if (origem && origem.pericias[0] !== 'Duas à sua escolha') {
+            origem.pericias.forEach(nomePericia => {
+                const row = document.querySelector(`#tabela-pericias tbody tr[data-nome="${nomePericia}"]`);
+                if (row) {
+                    const checkbox = row.querySelector('.treino-check');
+                    checkbox.checked = true;
+                    checkbox.classList.add('origem-treino');
+                    checkbox.disabled = true;
+                    row.classList.add('origem-highlight');
+                }
+            });
+        }
+    }
+
+    function handleOrigemChange() {
+        const modalOrigem = document.getElementById('modal-origem');
+        const modalOrigemTitulo = modalOrigem.querySelector('#modal-origem-titulo');
+        const modalOrigemBeneficios = modalOrigem.querySelector('#modal-origem-beneficios');
+        const selectedOrigemKey = document.getElementById('origem').value;
+
+        aplicarBeneficiosOrigem(selectedOrigemKey);
+
+        if (selectedOrigemKey !== 'nenhuma') {
+            const origem = ORIGENS_DATA[selectedOrigemKey];
+            if (origem) {
+                modalOrigemTitulo.textContent = origem.nome;
+                modalOrigemBeneficios.innerHTML = `
+                    <p><strong>Perícias Treinadas:</strong> ${origem.pericias.join(', ')}</p>
+                    <p><strong>Poder: ${origem.poder}</strong></p>
+                    <p>${origem.descricao}</p>
+                `;
+                modalOrigem.style.display = 'block';
+            }
+        }
+
+        saveCharacterData();
     }
 
     function popularTabelaPericias() {
@@ -221,6 +357,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function init() {
         popularTabelaPericias();
+        popularOrigens();
+
+        const modalOrigem = document.getElementById('modal-origem');
+        const closeButton = modalOrigem.querySelector('.close-button');
+        document.getElementById('origem').addEventListener('change', handleOrigemChange);
+        closeButton.addEventListener('click', () => {
+            modalOrigem.style.display = 'none';
+        });
+        window.addEventListener('click', (event) => {
+            if (event.target == modalOrigem) {
+                modalOrigem.style.display = 'none';
+            }
+        });
+
         const savedData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
         if (savedData && savedData.length === NUM_CHARS) {
             characters = savedData;
