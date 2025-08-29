@@ -51,6 +51,36 @@ document.addEventListener('DOMContentLoaded', function() {
         'vitima': { nome: 'Vítima', pericias: ['Reflexos', 'Vontade'], poder: 'Cicatrizes Psicológicas', descricao: 'Você recebe +1 de Sanidade para cada 5% de NEX.', beneficios: { san_por_nex: 1 } }
     };
 
+    const CLASSES_DATA = {
+        'combatente': {
+            nome: 'Combatente',
+            pv_base: 20, pv_nivel: 4,
+            pe_base: 2, pe_nivel: 2,
+            san_base: 12, san_nivel: 3,
+            habilidades: {
+                5: "Ataque Especial: Quando faz um Ataque, você pode gastar 2 PE para receber +2 no teste de ataque ou +5 na rolagem de dano."
+            }
+        },
+        'especialista': {
+            nome: 'Especialista',
+            pv_base: 16, pv_nivel: 3,
+            pe_base: 3, pe_nivel: 3,
+            san_base: 16, san_nivel: 4,
+            habilidades: {
+                5: "Perito: Escolha duas perícias. Quando faz um teste de uma delas, pode gastar 2 PE para somar +1d6 no resultado.\\nEclético: Pode gastar 2 PE para receber os benefícios de ser treinado numa perícia."
+            }
+        },
+        'ocultista': {
+            nome: 'Ocultista',
+            pv_base: 12, pv_nivel: 2,
+            pe_base: 4, pe_nivel: 4,
+            san_base: 20, san_nivel: 5,
+            habilidades: {
+                5: "Escolhido Pelo Outro Lado: Você escolhe 3 rituais de 1° Círculo. Você aprende esses rituais."
+            }
+        }
+    };
+
     function createDefaultCharacter() {
         const defaultPericias = {};
         periciasLista.forEach(p => {
@@ -60,10 +90,10 @@ document.addEventListener('DOMContentLoaded', function() {
         return {
             info: {
                 'nome-jogador': '', 'nome-personagem': '', 'ocupacao': '', 'origem': 'nenhuma',
-                'classe': '', 'nex': 5, 'pv-atual': '', 'san-atual': '', 'pe-atual': '',
+                'classe': 'nenhuma', 'nex': 5, 'pv-atual': '', 'san-atual': '', 'pe-atual': '',
                 'outras-resistencias': '', 'habilidades-texto': ''
             },
-            atributos: { 'agi': 0, 'for': 0, 'int': 0, 'pre': 0, 'vig': 0 },
+            atributos: { 'agi': 1, 'for': 1, 'int': 1, 'pre': 1, 'vig': 1 },
             pericias: defaultPericias,
             armas: [],
             inventario: []
@@ -148,6 +178,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('origem').value = origemSalva;
         aplicarBeneficiosOrigem(origemSalva);
 
+        document.getElementById('classe').value = charData.info['classe'] || 'nenhuma';
+
         updateSwitcherUI();
         recalcularFicha();
     }
@@ -171,14 +203,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const nexLevel = Math.floor(nex / 5);
 
+        const classeKey = document.getElementById('classe').value;
+        const classe = CLASSES_DATA[classeKey];
+
+        const pvBase = classe ? classe.pv_base : 16;
+        const pvNivel = classe ? classe.pv_nivel : 3;
+        const sanBase = classe ? classe.san_base : 12;
+        const sanNivel = classe ? classe.san_nivel : 3;
+        const peBase = classe ? classe.pe_base : 2;
+        const peNivel = classe ? classe.pe_nivel : 2;
+
         // --- Cálculos de Status ---
-        let pvMax = (8 + vigor) + ((vigor + 2) * (nexLevel - 1));
+        let pvMax = (pvBase + vigor) + ((pvNivel + vigor) * (nexLevel - 1));
         if (beneficios.pv_por_nex) {
             pvMax += (Math.floor(nex / 5) * beneficios.pv_por_nex);
             document.getElementById('pv-max').classList.add('stat-highlight');
         }
 
-        let sanMax = 8 + (2 * (nexLevel - 1));
+        let sanMax = sanBase + (sanNivel * (nexLevel - 1));
         if (beneficios.sanidade_mod) {
             sanMax = Math.floor(sanMax * beneficios.sanidade_mod);
             document.getElementById('san-max').classList.add('stat-highlight');
@@ -188,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('san-max').classList.add('stat-highlight');
         }
 
-        let peMax = (2 + presenca) + (presenca * (nexLevel - 1));
+        let peMax = (peBase + presenca) + ((peNivel + presenca) * (nexLevel - 1));
         if (beneficios.pe_bonus) {
             peMax += beneficios.pe_bonus;
             document.getElementById('pe-max').classList.add('stat-highlight');
@@ -295,6 +337,43 @@ document.addEventListener('DOMContentLoaded', function() {
         saveCharacterData();
     }
 
+    function popularClasses() {
+        const selectClasse = document.getElementById('classe');
+        Object.keys(CLASSES_DATA).forEach(key => {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = CLASSES_DATA[key].nome;
+            selectClasse.appendChild(option);
+        });
+    }
+
+    function handleClasseChange() {
+        const classeKey = document.getElementById('classe').value;
+        const nex = parseInt(document.getElementById('nex').value) || 0;
+        const habilidadesTextarea = document.getElementById('habilidades-texto');
+
+        let oldText = habilidadesTextarea.value;
+        const startMarker = "--- HABILIDADES DE CLASSE ---";
+        const endMarker = "----------------------------";
+        const regex = new RegExp(`\\n?${startMarker}[\\s\\S]*?${endMarker}\\n?`, 'g');
+        habilidadesTextarea.value = oldText.replace(regex, '').trim();
+
+        if (classeKey !== 'nenhuma' && CLASSES_DATA[classeKey]) {
+            const classe = CLASSES_DATA[classeKey];
+            let newAbilities = `\n\n${startMarker}\n`;
+
+            // Find all abilities for the current NEX or lower
+            for (const nexLevel in classe.habilidades) {
+                if (nex >= nexLevel) {
+                    newAbilities += `NEX ${nexLevel}%: ${classe.habilidades[nexLevel]}\n`;
+                }
+            }
+            newAbilities += `${endMarker}`;
+
+            habilidadesTextarea.value += newAbilities;
+        }
+    }
+
     function popularTabelaPericias() {
         const tbody = document.querySelector('#tabela-pericias tbody');
         tbody.innerHTML = '';
@@ -358,10 +437,15 @@ document.addEventListener('DOMContentLoaded', function() {
     function init() {
         popularTabelaPericias();
         popularOrigens();
+        popularClasses();
 
         const modalOrigem = document.getElementById('modal-origem');
         const closeButton = modalOrigem.querySelector('.close-button');
         document.getElementById('origem').addEventListener('change', handleOrigemChange);
+        document.getElementById('classe').addEventListener('change', () => {
+            handleClasseChange();
+            saveCharacterData();
+        });
         closeButton.addEventListener('click', () => {
             modalOrigem.style.display = 'none';
         });
@@ -387,6 +471,9 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.addEventListener('input', (event) => {
             if (event.target.closest('.save-field, #atributos, #pericias, #status')) {
                 saveCharacterData();
+            }
+            if (event.target.id === 'nex') {
+                handleClasseChange();
             }
         });
 
