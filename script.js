@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(characters));
+        recalcularFicha();
     }
 
     function loadCharacterData(index) {
@@ -237,15 +238,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (event.target.closest('.save-field, #atributos, #pericias, #status')) {
                 saveCharacterData();
             }
-            if (event.target.classList.contains('recalculate')) {
-                recalcularFicha();
-            }
         });
 
         document.body.addEventListener('change', (event) => { // Para checkboxes
             if (event.target.classList.contains('treino-check')) {
                 saveCharacterData();
-                recalcularFicha();
             }
         });
         
