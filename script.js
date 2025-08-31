@@ -336,7 +336,7 @@ document.addEventListener('DOMContentLoaded', function() {
             info: {
                 'nome-jogador': '', 'nome-personagem': '', 'ocupacao': '', 'origem': 'nenhuma',
                 'classe': 'nenhuma', 'trilha': 'nenhuma', 'nex': 5, 'pv-atual': '', 'san-atual': '', 'pe-atual': '',
-                'idade': 'jovem', 'desvantagens': [],
+                'idade': 'jovem', 'desvantagens': [], 'profile_image': '',
                 'outras-resistencias': '', 'habilidades-texto': ''
             },
             atributos: { 'agi': 1, 'for': 1, 'int': 1, 'pre': 1, 'vig': 1 },
@@ -491,8 +491,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Carregar infos e atributos
         Object.keys(charData.info).forEach(key => {
-            const field = document.getElementById(key);
-            if (field) field.value = charData.info[key];
+            if (key === 'profile_image') {
+                const imgElement = document.getElementById('profile-img');
+                if (imgElement && charData.info[key]) {
+                    imgElement.src = charData.info[key];
+                } else if (imgElement) {
+                    // Fallback to a default placeholder if no image is saved
+                    imgElement.src = 'https://i.imgur.com/V4RclhC.png';
+                }
+            } else {
+                const field = document.getElementById(key);
+                if (field) field.value = charData.info[key];
+            }
         });
         Object.keys(charData.atributos).forEach(key => {
             const field = document.getElementById(key);
@@ -868,6 +878,22 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         document.getElementById('add-item').addEventListener('click', () => { addItemRow(); saveCharacterData(); });
         document.getElementById('add-ritual').addEventListener('click', () => { addRitualRow(); saveCharacterData(); });
+
+        // Listener para upload de imagem de perfil
+        const profileImgUpload = document.getElementById('profile-img-upload');
+        profileImgUpload.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const dataUrl = e.target.result;
+                document.getElementById('profile-img').src = dataUrl;
+                characters[activeCharacterIndex].info.profile_image = dataUrl;
+                saveCharacterData();
+            };
+            reader.readAsDataURL(file);
+        });
 
         // Listeners de Eventos Globais (Inputs e Remoção)
         document.body.addEventListener('input', (event) => {
