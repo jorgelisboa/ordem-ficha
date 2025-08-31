@@ -101,13 +101,56 @@ section {
 /* GRIDS E COLUNAS */
 .main-layout {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 300px 1fr; /* Coluna do retrato e o resto */
     gap: 20px;
+    align-items: start;
 }
 
+.sheet-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    grid-column: 2 / 3;
+}
+
+#portrait-section {
+    grid-column: 1 / 2;
+    position: sticky;
+    top: 20px;
+}
+
+.portrait-container {
+    width: 100%;
+    height: 260px;
+    border: 2px solid var(--cor-borda);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    background-color: var(--cor-fundo);
+}
+
+#profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#portrait-section .btn-add {
+    width: 100%;
+    text-align: center;
+}
+
+
 @media (max-width: 1024px) {
-    .main-layout {
+    .main-layout, .sheet-columns {
         grid-template-columns: 1fr;
+    }
+    #portrait-section {
+        grid-column: auto;
+        position: static;
+    }
+    .portrait-container {
+        height: 300px;
     }
 }
 

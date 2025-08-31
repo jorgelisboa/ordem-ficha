@@ -70,8 +70,17 @@
         </section>
 
         <div class="main-layout">
-            <div class="left-column">
-                <section id="atributos">
+            <section id="portrait-section">
+                <div class="portrait-container">
+                    <img id="profile-img" src="https://i.imgur.com/V4RclhC.png" alt="Retrato do Personagem">
+                </div>
+                <label for="profile-img-upload" class="btn-add">Mudar Retrato</label>
+                <input type="file" id="profile-img-upload" accept="image/*" style="display: none;">
+            </section>
+
+            <div class="sheet-columns">
+                <div class="left-column">
+                    <section id="atributos">
                     <h2 class="section-title">Atributos</h2>
                     <div class="grid-atributos">
                         <div class="atributo-item">
@@ -183,6 +192,7 @@
                     </table>
                     </div>
                 </section>
+            </div>
             </div>
         </div>
         
