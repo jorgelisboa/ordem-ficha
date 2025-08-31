@@ -496,6 +496,29 @@ input[type="checkbox"] {
     background-color: var(--cor-destaque-hover);
 }
 
+.tag-agil {
+    color: #4caf50;
+    font-size: 0.8rem;
+    margin-left: 5px;
+}
+
+.ammo-cell {
+    text-align: center;
+}
+
+.ammo-count {
+    display: block;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.ammo-controls button {
+    margin: 0 2px;
+    padding: 2px 6px;
+    font-size: 0.8rem;
+}
+
 /* === ESTILOS RESPONSIVOS === */
 .table-wrapper {
     overflow-x: auto;
