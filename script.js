@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const LOCAL_STORAGE_KEY = 'ordemParanormalFichas_v2';
     let characters = [];
     let activeCharacterIndex = 0;
+    let idadeAnterior = 'jovem';
 
     const periciasLista = [
         { nome: 'Acrobacia', attr: 'agi' }, { nome: 'Adestramento', attr: 'pre' },
@@ -404,8 +405,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function handleIdadeChange() {
+        const idadeSelect = document.getElementById('idade');
+        const nexInput = document.getElementById('nex');
+
+        const novaIdadeKey = idadeSelect.value;
+        const antigaIdadeMod = IDADE_DATA[idadeAnterior]?.modificadores || {};
+        const novaIdadeMod = IDADE_DATA[novaIdadeKey]?.modificadores || {};
+
+        const bonusAntigo = antigaIdadeMod.nex_bonus || 0;
+        const bonusNovo = novaIdadeMod.nex_bonus || 0;
+
+        if (bonusAntigo !== bonusNovo) {
+            let nexAtual = parseInt(nexInput.value) || 0;
+            nexInput.value = (nexAtual - bonusAntigo) + bonusNovo;
+        }
+
+        idadeAnterior = novaIdadeKey; // Update for the next change
+
         updateDesvantagensUI();
-        // A lógica de aplicar os modificadores será no recalcularFicha
         saveCharacterData();
     }
 
@@ -513,6 +530,7 @@ document.addEventListener('DOMContentLoaded', function() {
         aplicarBeneficiosOrigem(origemSalva);
 
         document.getElementById('idade').value = charData.info['idade'] || 'jovem';
+        idadeAnterior = charData.info['idade'] || 'jovem';
         updateDesvantagensUI();
         if (charData.info.desvantagens) {
             charData.info.desvantagens.forEach(desvantagemKey => {
@@ -547,7 +565,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const desvantagensMod = desvantagensKeys.map(key => DESVANTAGENS_DATA[key]?.mod || {}).reduce((acc, obj) => ({ ...acc, ...obj }), {});
 
         // 2. Coletar valores base da ficha
-        const nexInput = parseInt(document.getElementById('nex').value) || 0;
+        const nex = parseInt(document.getElementById('nex').value) || 0;
         const vigor = parseInt(document.getElementById('vig').value) || 0;
         const presenca = parseInt(document.getElementById('pre').value) || 0;
         const agilidade = parseInt(document.getElementById('agi').value) || 0;
@@ -556,8 +574,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const atributos = { agi: agilidade, for: forca, int: intelecto, pre: presenca, vig: vigor };
 
-        // 3. Aplicar modificadores de base
-        let nex = nexInput + (idadeMod.nex_bonus || 0);
+        // 3. Calcular Nível de Exposição
         const nexLevel = Math.floor(nex / 5);
 
         // 4. Calcular Stats
