@@ -16,37 +16,9 @@
             <h1>Ficha de Ordem Paranormal</h1>
         </header>
 
-        <div id="character-switcher" class="character-switcher">
-            </div>
+        <div id="character-switcher" class="character-switcher"></div>
 
-        <section id="info-basicas" class="grid-container">
-            <div class="input-group">
-                <label for="nome-jogador">Nome do Jogador</label>
-                <input type="text" id="nome-jogador" class="save-field">
-            </div>
-            <div class="input-group">
-                <label for="nome-personagem">Nome do Personagem</label>
-                <input type="text" id="nome-personagem" class="save-field">
-            </div>
-            <div class="input-group">
-                <label for="ocupacao">Ocupação</label>
-                <input type="text" id="ocupacao" class="save-field">
-            </div>
-             <div class="input-group">
-                <label for="origem">Origem</label>
-                <input type="text" id="origem" class="save-field">
-            </div>
-            <div class="input-group">
-                <label for="classe">Classe / Trilha</label>
-                <input type="text" id="classe" class="save-field">
-            </div>
-            <div class="input-group">
-                <label for="nex">NEX (%)</label>
-                <input type="number" id="nex" class="save-field recalculate" value="5" min="5" step="5">
-            </div>
-        </section>
-
-        <div class="main-layout">
+        <div class="sheet-header">
             <section id="portrait-section">
                 <div class="portrait-container">
                     <img id="profile-img" src="https://i.imgur.com/V4RclhC.png" alt="Retrato do Personagem">
@@ -54,33 +26,75 @@
                 <label for="profile-img-upload" class="btn-add">Mudar Retrato</label>
                 <input type="file" id="profile-img-upload" accept="image/*" style="display: none;">
             </section>
+            <section id="info-basicas" class="grid-container">
+                <div class="input-group">
+                    <label for="nome-jogador">Nome do Jogador</label>
+                    <input type="text" id="nome-jogador" class="save-field">
+                </div>
+                <div class="input-group">
+                    <label for="nome-personagem">Nome do Personagem</label>
+                    <input type="text" id="nome-personagem" class="save-field">
+                </div>
+                <div class="input-group">
+                    <label for="ocupacao">Ocupação</label>
+                    <input type="text" id="ocupacao" class="save-field">
+                </div>
+                <div class="input-group">
+                    <label for="idade">Faixa Etária</label>
+                    <select id="idade" class="save-field"></select>
+                </div>
+                <div class="input-group">
+                    <label for="origem">Origem</label>
+                    <select id="origem" class="save-field"></select>
+                </div>
+                <div class="input-group">
+                    <label for="classe">Classe</label>
+                    <select id="classe" class="save-field"></select>
+                </div>
+                <div class="input-group" id="trilha-group" style="display: none;">
+                    <label for="trilha">Trilha</label>
+                    <select id="trilha" class="save-field"></select>
+                </div>
+                <div class="input-group">
+                    <label for="nex">NEX (%)</label>
+                    <input type="number" id="nex" class="save-field" value="5" min="5" step="5">
+                </div>
+            </section>
+        </div>
+
+        <section id="desvantagens-section" style="display: none;">
+            <h2 class="section-title">Peso da Idade</h2>
+            <p id="desvantagens-info"></p>
+            <div id="desvantagens-container" class="grid-container"></div>
+        </section>
+
+        <div class="main-layout">
             <div class="left-column">
                 <section id="atributos">
                     <h2 class="section-title">Atributos</h2>
                     <div class="grid-atributos">
                         <div class="atributo-item">
                             <label for="agi">AGI</label>
-                            <input type="number" id="agi" class="save-field recalculate" value="0">
+                            <input type="number" id="agi" class="save-field" value="1" min="0" max="5">
                         </div>
                         <div class="atributo-item">
                             <label for="for">FOR</label>
-                            <input type="number" id="for" class="save-field recalculate" value="0">
+                            <input type="number" id="for" class="save-field" value="1" min="0" max="5">
                         </div>
                         <div class="atributo-item">
                             <label for="int">INT</label>
-                            <input type="number" id="int" class="save-field recalculate" value="0">
+                            <input type="number" id="int" class="save-field" value="1" min="0" max="5">
                         </div>
                         <div class="atributo-item">
                             <label for="pre">PRE</label>
-                            <input type="number" id="pre" class="save-field recalculate" value="0">
+                            <input type="number" id="pre" class="save-field" value="1" min="0" max="5">
                         </div>
                         <div class="atributo-item">
                             <label for="vig">VIG</label>
-                            <input type="number" id="vig" class="save-field recalculate" value="0">
+                            <input type="number" id="vig" class="save-field" value="1" min="0" max="5">
                         </div>
                     </div>
                 </section>
-
                 <section id="status">
                     <h2 class="section-title">Status</h2>
                     <div class="status-grid">
@@ -89,7 +103,7 @@
                             <div class="status-values">
                                 <input type="number" id="pv-atual" class="save-field" placeholder="Atual">
                                 <span>/</span>
-                                <span id="pv-max">12</span>
+                                <span id="pv-max">0</span>
                             </div>
                         </div>
                          <div class="status-item san">
@@ -97,7 +111,7 @@
                             <div class="status-values">
                                 <input type="number" id="san-atual" class="save-field" placeholder="Atual">
                                 <span>/</span>
-                                <span id="san-max">12</span>
+                                <span id="san-max">0</span>
                             </div>
                         </div>
                          <div class="status-item pe">
@@ -105,12 +119,11 @@
                             <div class="status-values">
                                 <input type="number" id="pe-atual" class="save-field" placeholder="Atual">
                                 <span>/</span>
-                                <span id="pe-max">2</span>
+                                <span id="pe-max">0</span>
                             </div>
                         </div>
                     </div>
                 </section>
-                
                 <section id="defesas">
                     <h2 class="section-title">Defesa</h2>
                     <div class="defesa-grid">
@@ -128,69 +141,110 @@
                         <textarea rows="3" id="outras-resistencias" class="save-field"></textarea>
                     </div>
                 </section>
-
-                <section id="armas">
-                    <h2 class="section-title">Armas & Ataques</h2>
-                    <table id="tabela-armas">
-                        <thead>
-                            <tr>
-                                <th>Arma</th>
-                                <th>Tipo/Dano</th>
-                                <th>Crítico/Alcance</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            </tbody>
-                    </table>
-                    <button id="add-arma" class="btn-add">+ Adicionar Arma</button>
-                </section>
             </div>
-
             <div class="right-column">
                 <section id="pericias">
                     <h2 class="section-title">Perícias</h2>
-                    <table id="tabela-pericias">
-                        <thead>
-                            <tr>
-                                <th>Perícia</th>
-                                <th>Total</th>
-                                <th class="col-treino">T</th>
-                                <th>Bônus</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            </tbody>
-                    </table>
+                    <div class="table-wrapper">
+                        <table id="tabela-pericias">
+                            <thead>
+                                <tr>
+                                    <th>Perícia</th>
+                                    <th>Total</th>
+                                    <th class="col-treino">T</th>
+                                    <th>Bônus</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
                 </section>
             </div>
         </div>
         
+        <section id="armas">
+            <h2 class="section-title">Armas & Ataques</h2>
+            <div class="table-wrapper">
+                <table id="tabela-armas">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;">Arma</th>
+                            <th style="width: 20%;">Tipo/Dano</th>
+                            <th style="width: 20%;">Crítico/Alcance</th>
+                            <th style="width: 25%;">Munição</th>
+                            <th style="width: 10%;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <button id="add-arma" class="btn-add">+ Adicionar Arma</button>
+        </section>
+
         <section id="inventario">
             <h2 class="section-title">Inventário</h2>
             <div class="inventario-header">
                 <span>Carga Máxima: <span id="carga-maxima">5</span></span>
                 <span>Itens: I / II / III / IV</span>
             </div>
-            <table id="tabela-inventario">
-                <thead>
-                    <tr>
-                        <th>Item</th>
-                        <th>Espaços</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    </tbody>
-            </table>
+            <div class="table-wrapper">
+                <table id="tabela-inventario">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Espaços</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
             <button id="add-item" class="btn-add">+ Adicionar Item</button>
         </section>
 
         <section id="habilidades">
-            <h2 class="section-title">Habilidades, Rituais & Anotações</h2>
-            <textarea id="habilidades-texto" rows="15" class="save-field" placeholder="Descreva aqui as habilidades de classe, trilha, origem, rituais conhecidos e outras anotações importantes..."></textarea>
+            <h2 class="section-title">Habilidades & Anotações</h2>
+            <textarea id="habilidades-texto" rows="10" class="save-field" placeholder="Descreva aqui as habilidades de classe, trilha, origem e outras anotações importantes..."></textarea>
         </section>
 
-    </div><script src="script.js"></script>
+        <section id="rituais">
+            <h2 class="section-title">Rituais</h2>
+            <div class="table-wrapper">
+                <table id="tabela-rituais">
+                    <thead>
+                        <tr>
+                            <th style="width: 15%;">Nome</th>
+                            <th style="width: 15%;">Elemento/Círculo</th>
+                            <th style="width: 15%;">Execução/Alcance</th>
+                            <th style="width: 45%;">Descrição</th>
+                            <th style="width: 10%;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <button id="add-ritual" class="btn-add">+ Adicionar Ritual</button>
+        </section>
+
+    </div>
+
+    <div id="modal-origem" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3 id="modal-origem-titulo"></h3>
+            <div id="modal-origem-beneficios"></div>
+        </div>
+    </div>
+
+    <div id="modal-armas" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3>Adicionar Arma</h3>
+            <input type="text" id="search-arma" class="modal-search" placeholder="Buscar arma...">
+            <div id="lista-armas-modal" class="modal-list"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
