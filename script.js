@@ -474,6 +474,52 @@ document.addEventListener('DOMContentLoaded', function() {
         habilidadesTextarea.value += newAbilities;
     }
 
+    function aplicarBeneficiosOrigem(origemKey) {
+        // Limpar benefícios de perícia anteriores
+        document.querySelectorAll('.treino-check.origem-treino').forEach(checkbox => {
+            checkbox.checked = false;
+            checkbox.classList.remove('origem-treino');
+            checkbox.disabled = false;
+        });
+        document.querySelectorAll('#tabela-pericias tbody tr.origem-highlight').forEach(row => {
+            row.classList.remove('origem-highlight');
+        });
+
+        if (origemKey === 'nenhuma' || !origemKey) return;
+
+        const origem = ORIGENS_DATA[origemKey];
+        if (origem && origem.pericias[0] !== 'Duas à sua escolha') {
+            origem.pericias.forEach(nomePericia => {
+                const row = document.querySelector(`#tabela-pericias tbody tr[data-nome="${nomePericia}"]`);
+                if (row) {
+                    const checkbox = row.querySelector('.treino-check');
+                    checkbox.checked = true;
+                    checkbox.classList.add('origem-treino');
+                    checkbox.disabled = true;
+                    row.classList.add('origem-highlight');
+                }
+            });
+        }
+    }
+
+    function handleOrigemChange() {
+        const modalOrigem = document.getElementById('modal-origem');
+        const modalOrigemTitulo = modalOrigem.querySelector('#modal-origem-titulo');
+        const modalOrigemBeneficios = modalOrigem.querySelector('#modal-origem-beneficios');
+        const selectedOrigemKey = document.getElementById('origem').value;
+
+        aplicarBeneficiosOrigem(selectedOrigemKey);
+
+        if (selectedOrigemKey !== 'nenhuma') {
+            const origem = ORIGENS_DATA[selectedOrigemKey];
+            if (origem) {
+                modalOrigemTitulo.textContent = origem.nome;
+                modalOrigemBeneficios.innerHTML = `<p><strong>Perícias Treinadas:</strong> ${origem.pericias.join(', ')}</p><p><strong>Poder: ${origem.poder}</strong></p><p>${origem.descricao}</p>`;
+                modalOrigem.style.display = 'block';
+            }
+        }
+    }
+
     function handleClasseChange() {
         const classeKey = document.getElementById('classe').value;
         const trilhaGroup = document.getElementById('trilha-group');
@@ -582,7 +628,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        document.getElementById('origem').addEventListener('change', () => { saveCharacterData(); });
+        document.getElementById('origem').addEventListener('change', () => {
+            handleOrigemChange();
+            saveCharacterData();
+        });
         document.getElementById('classe').addEventListener('change', () => { handleClasseChange(); saveCharacterData(); });
         document.getElementById('trilha').addEventListener('change', () => { updateHabilidades(); saveCharacterData(); });
         document.getElementById('idade').addEventListener('change', handleIdadeChange);
